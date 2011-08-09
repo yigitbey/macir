@@ -13,10 +13,6 @@ class Point(db.Model):
     
 
 class MainPage(webapp.RequestHandler):
-    def getLast(self):
-        last = Point.all().order("-id").get()
-        return last
-
     def get(self):
         points = Point.all().order("-id")
         for point in points:
@@ -51,8 +47,8 @@ application = webapp.WSGIApplication([
 
 
 def main():
-  run_wsgi_app(application)
+    run_wsgi_app(application)
 
 
 if __name__ == '__main__':
-  main()
+    main()
