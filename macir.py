@@ -1,9 +1,11 @@
 from google.appengine.ext import db
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
+from google.appengine.ext.webapp import template
 
 import iterableStringProperty
 import iterableString
+import os
 
 class Point(db.Model):
     """Database object to store points"""
@@ -15,9 +17,8 @@ class Point(db.Model):
 class MainPage(webapp.RequestHandler):
     def get(self):
         points = Point.all().order("-id")
-        for point in points:
-            self.response.out.write(point.id + str(point.point))
-
+        path = os.path.join(os.path.dirname(__file__), 'templates/index.html')
+        self.response.out.write(template.render(path, locals()))
 
 class Put(webapp.RequestHandler):
     def getLast(self):
