@@ -20,7 +20,7 @@ class iterableString(str):
         currentCharIndex = x * -1
         
         #Icrement that char by one
-        nextCharValue = chr(ord(a[currentCharIndex])+1)
+        nextCharValue = chr(ord(self[currentCharIndex])+1)
        
         #If the icremented char is "z"+1, replace current position with "a"
         #Then check previous characters
