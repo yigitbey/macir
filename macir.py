@@ -21,8 +21,19 @@ class MainPage(webapp.RequestHandler):
         points = Point.all().order("-id")
 
         #Use templates/index.html as the template file
-        template = os.path.join(os.path.dirname(__file__), 'templates/index.html')
-        self.response.out.write(template.render(template, locals()))
+        templateFile = os.path.join(os.path.dirname(__file__), 'templates/index.html')
+        self.response.out.write(template.render(templateFile, locals()))
+
+class ShowPoint(webapp.RequestHandler):
+    """Class for showing individual points"""
+    
+    def get(self,pid):
+        pid = self.request.get("id")
+        self.response.out.write("sa "+pid)
+        #point = Point.all().filter("id",pid).get()
+        
+        #TODO: replace with template
+        #self.response.out.write(point.point)
 
 
 class Put(webapp.RequestHandler):
@@ -52,8 +63,8 @@ class Put(webapp.RequestHandler):
         """Method to handle get requests"""
 
         #Get latitude & longitude from request
-        la = self.request.get("la")
-        lo = self.request.get("lo")
+        la = float(self.request.get("la"))
+        lo = float(self.request.get("lo"))
 
         #Initialize a new GeoPt object with that values
         point = db.GeoPt(la,lo)
@@ -61,13 +72,15 @@ class Put(webapp.RequestHandler):
         #Write it on db, get the id
         id = self.putPoint(point)
 
+        #TODO: replace with template
         #Simply write it to page
         self.response.out.write(id)
 
 
 application = webapp.WSGIApplication([
-        ('/', MainPage),
-        ('/put',Put),
+        (r"/", MainPage),
+        (r"/put",Put),
+        (r"/([^/]+)",ShowPoint),
         
         ], debug=True)
 
