@@ -6,6 +6,7 @@ from google.appengine.ext.webapp import template
 import iterableStringProperty
 import iterableString
 import os
+import logging
 
 class Point(db.Model):
     """Database object to store points"""
@@ -28,8 +29,12 @@ class ShowPoint(webapp.RequestHandler):
     """Class for showing individual points"""
     
     def get(self,pid):
-        pid = self.request.get("id")
         self.response.out.write("sa "+pid)
+        print "############sda " + pid
+        #print self.request.get_all()
+        print ""
+        print self.request.arguments()
+
         #point = Point.all().filter("id",pid).get()
         
         #TODO: replace with template
@@ -76,12 +81,20 @@ class Put(webapp.RequestHandler):
         #Simply write it to page
         self.response.out.write(id)
 
+class Initialize(webapp.RequestHandler):
+    def get(self):
+        """Initialize the datastore"""
+        point = Point()
+        point.point = db.GeoPt(0,0)
+        point.id = "a"
+        point.put()
+        self.response.out.write("ok")
 
 application = webapp.WSGIApplication([
         (r"/", MainPage),
         (r"/put",Put),
-        (r"/([^/]+)",ShowPoint),
-        
+        (r"/initialize",Initialize),
+        (r'^/(?P<pid>[\w]+)', ShowPoint),
         ], debug=True)
 
 
